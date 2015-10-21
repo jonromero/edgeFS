@@ -26,5 +26,21 @@ store_file(Filename) ->
     upload_to_edge(Nodes, Fragments).
     
 
-            
+is_available() ->
+    yes.
+
+
+%% whenever there is an edge command, it should be followed by a score
+
+
+edge:search(Filename) ->    
+    Results = map(search, Edges),
+    score(Results),
+    get_file(Results, Filename).
+    
+       
+%% -1 point for non responsive
+%% to be updated     
+score(Edges) ->
+    ok.
     
