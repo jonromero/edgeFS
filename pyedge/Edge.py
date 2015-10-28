@@ -1,19 +1,22 @@
 import requests
+import uuid
 
 class Node():
     
-    def __init__(self):
-        self.node_id = None #this will be generated later?
+    def __init__(self, node_id=None, edge_url):
+        self.node_id = node_id if node_id else uuid.getnode()
         self.node_list = []
         self.bucket_size = 5
 
-    def _ping(self, node_id):
-        return self._rpc("ping", node_id)
+        if not self.ping_and_update(edge_url):
+            raise "%s edge node cannot be found"
 
-
-    def ping(self, node_id):
+    def _ping(self, edge_url):
+        return self.__rpc("ping", url=edge_url)
+    
+    def ping_and_update(self, node_id):
         if self._ping(node_id):
-            self.node_list = []
+            self.node_list = [node_id]
 
     def store(self, data):
         pass
@@ -24,7 +27,7 @@ class Node():
     def find(self, data_id):
         pass
 
-    def _update_bucket_list(self, node_id):
+    def update_node_list(self, node_id):
         # node exists, put it in the back
         if node_id in self.node_list:
             self.node_list.remove(node_id)
@@ -45,9 +48,9 @@ class Node():
             self.node_list.append(node_id)
                         
         
-    def _rpc(self, call, **kwargs):
+    def __rpc(self, call, **kwargs):
         try:
-            if call == "ping":
+            if call == "pong":
                 node_url = kwargs[0]
                 result = requests.get(node_url)
                 if result.ok:

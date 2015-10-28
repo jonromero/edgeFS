@@ -20,21 +20,15 @@ def index():
                    nodes=edgeNodes)
 
 
-@app.route('/connect')
-def connect():
-    global edgeNodes
+"""
+Respond to an 'r u alive' response
+"""
+@app.route('/pong')
+def pong():
     remote_ip = request.remote_addr
-    # if new connection
-    if remote_ip not in edgeNodes.keys():
-        edgeNodes[remote_ip] = 50
+    node.update_node_list(remote_ip)
         
-    return jsonify(nodes=edgeNodes)
-
-def connect_to_edge(host):
-    global edgeIndex
-    response = requests.get(host + "/connect")
-    print response
-    edgeIndex = response.json()['nodes']
+    return jsonify(resp='ok')
 
 
 
@@ -70,16 +64,15 @@ def store_file(filename):
         requests.put(edge_url + "/store/" + filename, data=fd.read())
 
 
-
-
 if __name__ == '__main__':
+    global node
     if len(sys.argv) == 1:
         print "starting as Edge master - but why do you want to do that?"
         app.run(debug=True, port=5000)
         
     else:
-        print "connecting to", sys.argv[1]
-        global node = Node()
-        connect_to_edge('http://'+sys.argv[1])
+        edge = sys.argv[1]
+        print "connecting to", edge
+        node = Node(edge, node_id="03ffae4vaf")
         app.run(debug=True, port=5001)
     
