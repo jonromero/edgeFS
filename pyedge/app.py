@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 import sys
-import requests
+from Edge import Node 
+
 app = Flask(__name__)
+node = None
 
 edgeNodes = {'127.0.0.1:5005': 99,
              '127.0.0.1:8000': 93}
@@ -69,6 +71,7 @@ def store_file(filename):
 
 
 
+
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         print "starting as Edge master - but why do you want to do that?"
@@ -76,6 +79,7 @@ if __name__ == '__main__':
         
     else:
         print "connecting to", sys.argv[1]
+        global node = Node()
         connect_to_edge('http://'+sys.argv[1])
         app.run(debug=True, port=5001)
     
