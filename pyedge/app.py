@@ -23,12 +23,12 @@ def index():
 """
 Respond to an 'r u alive' response
 """
-@app.route('/pong')
-def pong():
+@app.route('/ping/<new_node_id>')
+def ping(new_node_id):
     remote_ip = request.remote_addr
-    node.update_node_list(remote_ip)
+    node.update_node_list({new_node_id:remote_ip})
         
-    return jsonify(resp='ok')
+    return jsonify(node_id=node.node_id)
 
 
 
@@ -39,11 +39,11 @@ def search(filename):
         return fd.read()
     return "nok"    
 
+
 def search_for_file(filename):
     urls = [node[filename] for node in nodes]
     for url in urls:
         requests.get(url + "/search/" + filename)
-
 
 
 @app.route('/store/<filename>')
