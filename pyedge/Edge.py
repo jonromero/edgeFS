@@ -2,7 +2,8 @@ import requests
 import uuid
 
 class Node():
-    
+
+    # Init
     def __init__(self, edge_url, node_id=None):
         self.node_id = node_id if node_id else uuid.getnode()
         self.node_list = []
