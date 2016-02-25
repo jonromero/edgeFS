@@ -4,12 +4,12 @@ import uuid
 class Node():
 
     # Init
-    def __init__(self, edge_url, node_id=None):
+    def __init__(self, edge_url=None, node_id=None):
         self.node_id = node_id if node_id else uuid.getnode()
         self.node_list = []
         self.bucket_size = 5
 
-        if not self.ping_and_update(edge_url):
+        if edge_url and not self.ping_and_update(edge_url):
             raise "%s edge node cannot be found"
 
     def _ping(self, edge_url):
@@ -35,7 +35,7 @@ class Node():
     def update_node_list(self, node):
         node_id = node.keys()[0]
         # node exists, put it in the back
-        if node_id in self.node_list.keys():
+        if node_id in self.node_list:
             self.node_list.remove(node)
             self.node_list.append(node)
             
@@ -58,8 +58,8 @@ class Node():
     def __rpc(self, call, **kwargs):
         try:
             if call == "ping":
-                node_url = kwargs[0]
-                result = requests.get(node_url+"/ping/"+self.node_id)
+                node_url = kwargs['url']
+                result = requests.get('http://'+node_url+"/ping/"+self.node_id)
                 return result.json()['node_id']
         except:
             print "error in rpc"

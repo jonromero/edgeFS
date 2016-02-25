@@ -7,8 +7,8 @@ from Edge import Node
 app = Flask(__name__)
 node = None
 
-edgeNodes = {'127.0.0.1:5005': 99,
-             '127.0.0.1:8000': 93}
+edgeNodes = ['127.0.0.1:5005',
+             '127.0.0.1:8000']
 
 edgeIndex = [{'README.txt': [{'ip': '127.0.0.1:5005',
                               'ip': '127.0.0.1:5008'}]},
@@ -70,7 +70,8 @@ if __name__ == '__main__':
     global node
     if len(sys.argv) == 1:
         print "starting as Edge master - but why do you want to do that?"
-        app.run(debug=True, port=5000)
+        node = Node()
+        app.run(host='0.0.0.0', debug=True, port=5000)
         
     else:
         edge = sys.argv[1]
