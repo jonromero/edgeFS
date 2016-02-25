@@ -19,7 +19,7 @@ edgeIndex = [{'README.txt': [{'ip': '127.0.0.1:5005',
 @app.route('/')
 def index():
     return jsonify(index=edgeIndex,
-                   nodes=edgeNodes)
+                   nodes=node.node_list)
 
 
 """
@@ -28,6 +28,7 @@ Respond to an 'r u alive' response
 @app.route('/ping/<new_node_id>')
 def ping(new_node_id):
     remote_ip = request.remote_addr
+    print remote_ip
     node.update_node_list({new_node_id:remote_ip})
         
     return jsonify(node_id=node.node_id)
