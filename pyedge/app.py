@@ -1,3 +1,5 @@
+# NOTE: How about using hdf5 to store the data (compressed and encrypted?)
+
 from flask import Flask, request, jsonify
 import sys
 import requests
