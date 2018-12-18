@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import re
 import time
@@ -128,6 +130,41 @@ def ui_connect():
     answers = prompt(questions, style=style)
     return answers
 
+def ui_inside_edgefs():
+    questions = [
+        {
+            'type': 'list',
+            'name': 'first_loop',
+            'message': "What's next?",
+            'choices': [
+                {
+                    'key': 'v',
+                    'name': 'View open files',
+                    'value': 'view_files'
+                },
+                {
+                    'key': 'u',
+                    'name': 'Upload file',
+                    'value': 'upload'
+                }]
+        },
+    ]
+    
+    answers = prompt(questions, style=style)
+    return answers
+
+def ui_view_files(all_files):
+    questions = [
+        {
+            'type': 'checkbox',
+            'name': 'selected_files',
+            'message': 'Select files to download',
+            'choices': all_files
+        }
+    ]
+    
+    answers = prompt(questions, style=style)
+    return answers
 
 def main():
     """
@@ -157,8 +194,21 @@ def main():
             spinner.succeed("Connected to Edge ^"+ selection['edge_id'])
     
     log("Welcome to EdgeFS, Group 661", color="green")
-    ui_inside_edgefs()
+    log("20 Edges found, total 35 open files", color="green")
+    
+    selection = ui_inside_edgefs()
+    if selection['first_loop'] == 'view_files':
+        spinner = Halo(text='Downloading list from Edges, it might take a while', spinner='dots', text_color='green')
+        spinner.start()
+        time.sleep(2)
 
+        # TODO: download list of files
+        list_of_files_from_edges = [{'name': 'one.jpg'}, 
+                                    {'name': 'two.jpg'}]
+
+        spinner.succeed("List of files downloaded")
+        response = ui_view_files(list_of_files_from_edges)
+        log("Downloaded " + str(len(response['selected_files'])) + " files", color="green")
 
 if __name__ == '__main__':
     main()
