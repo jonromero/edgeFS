@@ -1,0 +1,14 @@
+This idea behind EdgeFS is that it is a very simple filesystem (less than 100 lines of Python),
+trivial to implement in other languages, trivial to read and understand.
+
+You start an Edge in your laptop/desktop and you can connect to either your Edges that store your files
+or connect to open edges you can find at EdgeFS.com. 
+
+You can download files from Edges, upload files (broken down to small encrypted parts) to other Edges
+and query all the files that exist in your connected Edge Universe.
+
+I imagine specific groups can be created (scientificpapers.edgefs.com) where you can query and download papers.
+
+Also index.edgefs.com can be created so EdgeFS can always be online.
+
+- Jon V
