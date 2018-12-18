@@ -178,7 +178,7 @@ def main():
     
     if config.has("edge_to_connect"):
         edge_to_connect = config.get("edge_to_connect")
-        spinner = Halo(text='Connecting to Edge', spinner='dots', text_color='green')
+        spinner = Halo(text='Connecting to Edge', spinner='pong', text_color='green')
         spinner.start()
         # TODO: send a ping to the node
         time.sleep(2)
@@ -186,7 +186,7 @@ def main():
     else:
         selection = ui_connect()
         if selection['node_type'] == 'client':
-            spinner = Halo(text='Connecting to Edge ^'+selection['edge_id'], spinner='dots', text_color='green')
+            spinner = Halo(text='Connecting to Edge ^'+selection['edge_id'], spinner='pong', text_color='green')
             spinner.start()
             # TODO: send a ping to the node
             time.sleep(2)
@@ -198,7 +198,7 @@ def main():
     
     selection = ui_inside_edgefs()
     if selection['first_loop'] == 'view_files':
-        spinner = Halo(text='Downloading list from Edges, it might take a while', spinner='dots', text_color='green')
+        spinner = Halo(text='Downloading list from Edges, it might take a while', spinner='dots3', text_color='green')
         spinner.start()
         time.sleep(2)
 
@@ -208,6 +208,11 @@ def main():
 
         spinner.succeed("List of files downloaded")
         response = ui_view_files(list_of_files_from_edges)
+
+        spinner = Halo(text='Downloading files', spinner='dots3', text_color='green')
+        spinner.start()
+        time.sleep(2)
+
         log("Downloaded " + str(len(response['selected_files'])) + " files", color="green")
 
 if __name__ == '__main__':
