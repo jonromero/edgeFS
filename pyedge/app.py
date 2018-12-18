@@ -34,7 +34,6 @@ def ping(new_node_id):
     return jsonify(node_id=node.node_id)
 
 
-
 @app.route('/search/<filename>')
 def search(filename):
     global nodes
@@ -67,16 +66,18 @@ def store_file(filename):
         requests.put(edge_url + "/store/" + filename, data=fd.read())
 
 
-if __name__ == '__main__':
-    global node
-    if len(sys.argv) == 1:
-        print "starting as Edge master - but why do you want to do that?"
-        node = Node()
-        app.run(host='0.0.0.0', debug=True, port=5000)
+def start_edge(edge_url=None):
+    node = None
+    try:
+        port = 5000
+        if edge_url:
+            node = Node(edge_url, node_id="03ffae4vaf")
+            port += 1
+        else: # master
+            node = Node()
         
-    else:
-        edge = sys.argv[1]
-        print "connecting to", edge
-        node = Node(edge, node_id="03ffae4vaf")
-        app.run(debug=True, port=5001)
+        app.run(host='0.0.0.0', debug=True, port=port)
+        return node
+    except:
+        return False
     

@@ -11,6 +11,7 @@ from PyInquirer import (Token, ValidationError, Validator, print_json, prompt,
 
 from pyfiglet import figlet_format
 
+from app import start_edge
 try:
     import colorama
     colorama.init()
@@ -53,53 +54,6 @@ class EmptyValidator(Validator):
             raise ValidationError(
                 message="You can't leave this blank",
                 cursor_position=len(value.text))
-
-
-class FilePathValidator(Validator):
-    def validate(self, value):
-        if len(value.text):
-            if os.path.isfile(value.text):
-                return True
-            else:
-                raise ValidationError(
-                    message="File not found",
-                    cursor_position=len(value.text))
-        else:
-            raise ValidationError(
-                message="You can't leave this blank",
-                cursor_position=len(value.text))
-
-
-class APIKEYValidator(Validator):
-    def validate(self, value):
-        if len(value.text):
-            sg = sendgrid.SendGridAPIClient(
-                api_key=value.text)
-            try:
-                response = sg.client.api_keys._(value.text).get()
-                if response.status_code == 200:
-                    return True
-            except:
-                raise ValidationError(
-                    message="There is an error with the API Key!",
-                    cursor_position=len(value.text))
-        else:
-            raise ValidationError(
-                message="You can't leave this blank",
-                cursor_position=len(value.text))
-
-
-def askAPIKEY():
-    questions = [
-        {
-            'type': 'input',
-            'name': 'api_key',
-            'message': 'Enter SendGrid API Key (Only needed to provide once)',
-            'validate': APIKEYValidator,
-        },
-    ]
-    answers = prompt(questions, style=style)
-    return answers
 
 def ui_connect():
     questions = [
@@ -188,10 +142,13 @@ def main():
         if selection['node_type'] == 'client':
             spinner = Halo(text='Connecting to Edge ^'+selection['edge_id'], spinner='pong', text_color='green')
             spinner.start()
-            # TODO: send a ping to the node
-            time.sleep(2)
-            #spinner.fail("Connecting to ^"+selection['edge_id']+" failed")
-            spinner.succeed("Connected to Edge ^"+ selection['edge_id'])
+            time.sleep(4)
+            edge = start_edge(selection['edge_id'])
+            if edge:
+                spinner.succeed("Connected to Edge ^"+ selection['edge_id'])
+            else:
+                spinner.fail("Connecting to ^"+selection['edge_id']+" failed")
+            
     
     log("Welcome to EdgeFS, Group 661", color="green")
     log("20 Edges found, total 35 open files", color="green")

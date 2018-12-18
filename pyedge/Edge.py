@@ -63,4 +63,5 @@ class Node():
                 return result.json()['node_id']
         except:
             print "error in rpc"
+            return False
         
